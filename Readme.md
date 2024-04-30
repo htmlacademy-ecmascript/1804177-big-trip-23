@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Яша Дронов](https://up.htmlacademy.ru/ecmascript/23/user/1804177).
-* Наставник: `[Сергей Андреев](https://htmlacademy.ru/profile/id812127)`.
+* Наставник: [Сергей Андреев](https://htmlacademy.ru/profile/id812127).
 
 ---
 
