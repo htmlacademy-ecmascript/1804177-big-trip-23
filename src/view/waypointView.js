@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-const createWaypointsTempale = () => `
+const createWaypointTempale = () => `
 <li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="2019-03-18">MAR 18</time>
@@ -39,9 +39,9 @@ const createWaypointsTempale = () => `
     </div>
 </li>`;
 
-export default class Waypoints {
+export default class WaypointView {
   getTempale() {
-    return createWaypointsTempale();
+    return createWaypointTempale();
   }
 
   getElement() {

@@ -1,24 +1,24 @@
 import {render, RenderPosition} from '../render.js';
-import Sortings from '../view/sortings.js';
-import EditForm from '../view/edit-form.js';
-import Waypoints from '../view/waypoints.js';
-import EventList from '../view/event-list.js';
+import SortingsView from '../view/sortingsView.js';
+import EditFormView from '../view/edit-formView.js';
+import WaypointView from '../view/waypointView.js';
+import EventListView from '../view/event-listView.js';
 
 const AMOUNT_POINTS = 3;
 
 export default class MainPresenter {
-  eventListComponent = new EventList();
+  eventListComponent = new EventListView();
 
   constructor({container}) {
     this.container = container;
   }
 
   init() {
-    render(new Sortings(), this.container);
+    render(new SortingsView(), this.container);
     render(this.eventListComponent, this.container);
-    render(new EditForm(), this.eventListComponent.getElement(), RenderPosition.AFTERBEGIN);
+    render(new EditFormView(), this.eventListComponent.getElement(), RenderPosition.AFTERBEGIN);
     for (let i = 0; i < AMOUNT_POINTS; i++) {
-      render(new Waypoints(), this.eventListComponent.getElement(), RenderPosition.BEFOREEND);
+      render(new WaypointView(), this.eventListComponent.getElement(), RenderPosition.BEFOREEND);
     }
   }
 }

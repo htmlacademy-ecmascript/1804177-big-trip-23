@@ -1,13 +1,13 @@
 import { createElement } from '../render.js';
 
 const EDITS_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-const createEditsTemplate = (type) => `
+const createEventTypesTemplate = (type) => `
     <div class="event__type-item">
         <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
         <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>`;
 
-const createEditsTempale = () => `
+const createFormTemplate = () => `
 <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -22,7 +22,7 @@ const createEditsTempale = () => `
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
 
-              ${EDITS_TYPES.map((type) => createEditsTemplate(type.toLowerCase())).join('')}
+              ${EDITS_TYPES.map((type) => createEventTypesTemplate(type.toLowerCase())).join('')}
             </fieldset>
           </div>
         </div>
@@ -128,9 +128,9 @@ const createEditsTempale = () => `
     </form>
 </li>`;
 
-export default class EditForm {
+export default class EditFormView {
   getTempale() {
-    return createEditsTempale();
+    return createFormTemplate();
   }
 
   getElement() {

@@ -13,7 +13,7 @@ const createInfoTempale = () => `
   </p>
 </section>`;
 
-export default class Info {
+export default class InfoView {
   getTempale() {
     return createInfoTempale();
   }
