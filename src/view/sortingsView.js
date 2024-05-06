@@ -1,6 +1,6 @@
 import {createElement} from '../render.js';
+import {SORT_TYPES} from '../const.js';
 
-const SORT_TYPES = ['Day', 'Event', 'Time', 'Price', 'Offers'];
 const createSortsItemTemplate = (type, isActive) => `
     <div class="trip-sort__item  trip-sort__item--${type}">
         <input id="sort-${type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${type}" ${isActive ? 'checked' : ''}>
