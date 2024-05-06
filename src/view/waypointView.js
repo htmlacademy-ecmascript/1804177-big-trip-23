@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
-import { dateFormatting } from '../utils.js';
+import {createElement} from '../render.js';
+import {dateFormatting} from '../utils.js';
 
 const createWaypointTempale = (point, destinations, offers) => {
   const {dateFrom, dateTo, type, isFavorite} = point;
@@ -28,13 +28,11 @@ const createWaypointTempale = (point, destinations, offers) => {
           </p>
           <h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
-            ${pointOffers.map((offer) => (
-                `<li class="event__offer">
+            ${pointOffers.map((offer) => (`<li class="event__offer">
                   <span class="event__offer-title">${offer.title}</span>
                   &plus;&euro;&nbsp;
                   <span class="event__offer-price">${offer.price}</span>
-                </li>`
-            )).join('') }
+                </li>`)).join('')}
           </ul>
           <button class="event__favorite-btn ${isFavorite ? ' event__favorite-btn--active' : ''}" type="button">
             <span class="visually-hidden">Add to favorite</span>
