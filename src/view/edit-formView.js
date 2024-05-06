@@ -86,11 +86,11 @@ const createFormTemplate = (point, destinations, offers) => {
         </section>` : ''}
 
         ${pointDestinations ? (
-    `<section class="event__section  event__section--destination">
+      `<section class="event__section  event__section--destination">
                 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${description}</p>
             ${pictures.length ?
-      `<div class="event__photos-container">
+        `<div class="event__photos-container">
                   <div class="event__photos-tape">
                   ${pictures.map((pictype) => `<img class="event__photo" src="${pictype.src}" alt="${pictype.description}">`)}
                   </div>
