@@ -1,13 +1,15 @@
 import { createElement } from '../render.js';
-import { EDITS_TYPES } from '../const.js';
-import { dateFormatting } from '../utils.js';
+import { POINT_TYPES } from '../const.js';
+import { formatDate } from '../utils.js';
 
 const createFormTemplate = (point, destinations, offers) => {
   const pointDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
+
   const {dateFrom, dateTo, type, basePrice} = point;
   const {description, pictures} = pointDestinations || {};
+
   const pointId = point.id || 0;
 
   return (`
@@ -25,7 +27,7 @@ const createFormTemplate = (point, destinations, offers) => {
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
 
-              ${EDITS_TYPES.map((pointType) =>
+              ${POINT_TYPES.map((pointType) =>
       `<div class="event__type-item">
                 <input id="event-type-${pointType}-${pointId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${pointType === type ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${pointId}">${pointType}</label>
@@ -46,10 +48,10 @@ const createFormTemplate = (point, destinations, offers) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFormatting(dateTo, 'DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(dateTo, 'DD/MM/YY HH:mm')}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-${pointId}">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${dateFormatting(dateFrom, 'DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${formatDate(dateFrom, 'DD/MM/YY HH:mm')}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -67,7 +69,7 @@ const createFormTemplate = (point, destinations, offers) => {
           <span class="visually-hidden">Open event</span>
         </button>` : ''}
       </header>
-    ${typeOffers.length ?
+    ${typeOffers.length > 0 ?
       `<section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -89,7 +91,7 @@ const createFormTemplate = (point, destinations, offers) => {
       `<section class="event__section  event__section--destination">
                 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${description}</p>
-            ${pictures.length ?
+            ${pictures.length > 0 ?
         `<div class="event__photos-container">
                   <div class="event__photos-tape">
                   ${pictures.map((pictype) => `<img class="event__photo" src="${pictype.src}" alt="${pictype.description}">`)}

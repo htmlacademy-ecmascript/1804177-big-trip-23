@@ -1,7 +1,7 @@
 import MainPresenter from './presenter/main-presenter.js';
 import { render, RenderPosition } from './render.js';
-import InfoView from './view/infoView.js';
-import FiltersView from './view/filtersView.js';
+import InfoView from './view/info-view.js';
+import FiltersView from './view/filters-view.js';
 import PointModel from './model/point-model.js';
 
 const tripMainElement = document.querySelector('.trip-main');

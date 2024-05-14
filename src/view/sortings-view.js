@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {SORT_TYPES} from '../const.js';
+import { createElement } from '../render.js';
+import { SORT_TYPES } from '../const.js';
 
 const createSortsItemTemplate = (type, isActive) => `
     <div class="trip-sort__item  trip-sort__item--${type}">

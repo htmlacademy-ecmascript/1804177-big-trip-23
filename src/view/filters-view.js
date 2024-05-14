@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import {FILTER_TYPES} from '../const.js';
+import { FILTER_TYPES } from '../const.js';
 
 const createFilterItemTemplate = (type, isActive) => `
     <div class="trip-filters__filter">

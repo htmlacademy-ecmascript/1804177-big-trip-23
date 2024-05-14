@@ -1,27 +1,28 @@
-import {createElement} from '../render.js';
-import {dateFormatting} from '../utils.js';
+import { createElement } from '../render.js';
+import { formatDate, getDuration } from '../utils.js';
 
 const createWaypointTempale = (point, destinations, offers) => {
-  const {dateFrom, dateTo, type, isFavorite} = point;
   const currentDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
 
+  const {dateFrom, dateTo, type, isFavorite} = point;
+
   return (
     `<li class="trip-events__item">
         <div class="event">
-          <time class="event__date" datetime="${dateFormatting(dateFrom, 'YYYY-MM-DD')}">${dateFormatting(dateFrom, 'MMM DD')}</time>
+          <time class="event__date" datetime="${formatDate(dateFrom, 'YYYY-MM-DD')}">${formatDate(dateFrom, 'MMM DD')}</time>
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
           </div>
           <h3 class="event__title">${type} ${currentDestinations.name}</h3>
           <div class="event__schedule">
             <p class="event__time">
-              <time class="event__start-time" datetime="2019-03-18T10:30">${dateFormatting(dateFrom, 'HH:mm')}</time>
+              <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, 'HH:mm')}</time>
               &mdash;
-              <time class="event__end-time" datetime="2019-03-18T11:00">${dateFormatting(dateTo, 'HH:mm')}</time>
+              <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, 'HH:mm')}</time>
             </p>
-            <p class="event__duration">30M</p>
+            <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
           </div>
           <p class="event__price">
             &euro;&nbsp;<span class="event__price-value">20</span>
