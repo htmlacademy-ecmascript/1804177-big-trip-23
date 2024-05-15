@@ -1,12 +1,33 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
-function dateFormatting(dueDate, format) {
+function formatDate(dueDate, format) {
   return dueDate ? dayjs(dueDate).format(format) : '';
 }
 
-function convertTime(dateTo, dateFrom) {
-  const time = dayjs(dateTo).diff(dayjs(dateFrom), 'minutes');
-  return time ? `${Math.floor(time / 60)}H ${time % 60}M` : '';
-}
+const getDuration = (dateFrom, dateTo) => {
+  const startDate = dayjs(dateFrom).startOf('minute');
+  const endDate = dayjs(dateTo).startOf('minute');
+  const timeDifferenceInMs = endDate.diff(startDate);
+  const durationDate = dayjs.duration(timeDifferenceInMs);
 
-export { dateFormatting, convertTime };
+  const days = durationDate.days();
+  const hours = durationDate.hours();
+  const minutes = durationDate.minutes();
+
+  const formattedDuration = [];
+  if (days > 0) {
+    formattedDuration.push(`${days}D`);
+  }
+  if (hours > 0) {
+    formattedDuration.push(`${hours}H`);
+  }
+  if (minutes > 0) {
+    formattedDuration.push(`${minutes}M`);
+  }
+
+  return formattedDuration.join(' ');
+};
+
+export { formatDate, getDuration };
