@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
 import {SORT_TYPES} from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createSortsItemTemplate = (type, isActive) => `
     <div class="trip-sort__item  trip-sort__item--${type}">
@@ -12,20 +12,8 @@ const createSortsTempale = () => `
         ${SORT_TYPES.map((type, index) => createSortsItemTemplate(type.toLowerCase(), index === 0)).join('')}
     </form>`;
 
-export default class SortingsView {
-  getTempale() {
+export default class SortingsView extends AbstractView{
+  get template() {
     return createSortsTempale();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTempale());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

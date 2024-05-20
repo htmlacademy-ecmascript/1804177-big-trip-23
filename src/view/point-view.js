@@ -1,8 +1,8 @@
-import {createElement} from '../render.js';
-import {dateFormatting} from '../utils.js';
+import {formatDate, getDuration} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-const createWaypointTempale = (point, destinations, offers) => {
-  const {dateFrom, dateTo, type, isFavorite} = point;
+const createPointTempale = (point, destinations, offers) => {
+  const {dateFrom, dateTo, type, basePrice, isFavorite} = point;
   const currentDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
@@ -10,21 +10,21 @@ const createWaypointTempale = (point, destinations, offers) => {
   return (
     `<li class="trip-events__item">
         <div class="event">
-          <time class="event__date" datetime="${dateFormatting(dateFrom, 'YYYY-MM-DD')}">${dateFormatting(dateFrom, 'MMM DD')}</time>
+          <time class="event__date" datetime="${formatDate(dateFrom, 'YYYY-MM-DD')}">${formatDate(dateFrom, 'MMM DD')}</time>
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
           </div>
           <h3 class="event__title">${type} ${currentDestinations.name}</h3>
           <div class="event__schedule">
             <p class="event__time">
-              <time class="event__start-time" datetime="2019-03-18T10:30">${dateFormatting(dateFrom, 'HH:mm')}</time>
+              <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, 'HH:mm')}</time>
               &mdash;
-              <time class="event__end-time" datetime="2019-03-18T11:00">${dateFormatting(dateTo, 'HH:mm')}</time>
+              <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, 'HH:mm')}</time>
             </p>
-            <p class="event__duration">30M</p>
+            <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
           </div>
           <p class="event__price">
-            &euro;&nbsp;<span class="event__price-value">20</span>
+            &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
           </p>
           <h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
@@ -47,26 +47,28 @@ const createWaypointTempale = (point, destinations, offers) => {
     </li>`);
 };
 
-export default class WaypointView {
-  constructor(point, destinations, offers) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class PointView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+  #handleEditClick = null;
+
+  constructor({point, destinations, offers, onEditClick}) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTempale() {
-    return createWaypointTempale(this.point, this.destinations, this.offers);
+  get template() {
+    return createPointTempale(this.#point, this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTempale());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
