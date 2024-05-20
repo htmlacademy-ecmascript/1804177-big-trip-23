@@ -1,4 +1,4 @@
-export const offers = [
+const offers = [
   {
     'type': 'taxi',
     'offers': [
@@ -6,6 +6,11 @@ export const offers = [
         'id': 'b4c3e4e6-9053-42ce-b747-e281314baa31',
         'title': 'Upgrade to a business class',
         'price': 120
+      },
+      {
+        'id': 'a4c3e4e6-9053-42ce-b747-e281314baa31',
+        'title': 'Upgrade to a business class',
+        'price': 125
       }
     ]
   },
@@ -29,3 +34,5 @@ export const offers = [
     'offers': []
   }
 ];
+
+export const getOffers = ()=> offers;

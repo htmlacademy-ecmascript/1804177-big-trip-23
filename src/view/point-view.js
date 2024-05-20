@@ -1,8 +1,8 @@
 import {formatDate, getDuration} from '../utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createWaypointTempale = (point, destinations, offers) => {
-  const {dateFrom, dateTo, type, isFavorite} = point;
+const createPointTempale = (point, destinations, offers) => {
+  const {dateFrom, dateTo, type, basePrice, isFavorite} = point;
   const currentDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
@@ -24,7 +24,7 @@ const createWaypointTempale = (point, destinations, offers) => {
             <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
           </div>
           <p class="event__price">
-            &euro;&nbsp;<span class="event__price-value">20</span>
+            &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
           </p>
           <h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
@@ -47,7 +47,7 @@ const createWaypointTempale = (point, destinations, offers) => {
     </li>`);
 };
 
-export default class WaypointView extends AbstractView {
+export default class PointView extends AbstractView {
   #point = null;
   #destinations = null;
   #offers = null;
@@ -64,7 +64,7 @@ export default class WaypointView extends AbstractView {
   }
 
   get template() {
-    return createWaypointTempale(this.#point, this.#destinations, this.#offers);
+    return createPointTempale(this.#point, this.#destinations, this.#offers);
   }
 
   #editClickHandler = (evt) => {

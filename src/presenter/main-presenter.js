@@ -1,11 +1,11 @@
 import {render, RenderPosition, replace} from '../framework/render.js';
 import SortingsView from '../view/sortings-view.js';
 import EditFormView from '../view/edit-form-view.js';
-import WaypointView from '../view/waypoint-view.js';
-import EventListView from '../view/event-list-view.js';
+import PointView from '../view/point-view.js';
+import PointListView from '../view/point-list-view.js';
 
 export default class MainPresenter {
-  eventListComponent = new EventListView();
+  eventListComponent = new PointListView();
   #container = null;
   #pointModel = null;
 
@@ -26,6 +26,9 @@ export default class MainPresenter {
   }
 
   #renderPoint(point) {
+    const destinations = this.#pointModel.getDestinations();
+    const offers = this.#pointModel.getOffers();
+
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -34,10 +37,10 @@ export default class MainPresenter {
       }
     };
 
-    const pointComponent = new WaypointView({
+    const pointComponent = new PointView({
       point,
-      destinations: this.#pointModel.getDestinations(),
-      offers: this.#pointModel.getOffers(),
+      destinations: destinations,
+      offers: offers,
       onEditClick: () => {
         replacePointToForm();
         document.addEventListener('keydown', escKeyDownHandler);
@@ -46,8 +49,8 @@ export default class MainPresenter {
 
     const editFormComponent = new EditFormView({
       point,
-      destinations: this.#pointModel.getDestinations(),
-      offers: this.#pointModel.getOffers(),
+      destinations: destinations,
+      offers: offers,
       onFormSubmit: () => {
         replaceFormToPoint();
         document.removeEventListener('keydown', escKeyDownHandler);
