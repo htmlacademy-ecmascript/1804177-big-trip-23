@@ -3,6 +3,8 @@ import SortingsView from '../view/sortings-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
 import PointListView from '../view/point-list-view.js';
+import EmptyMessageView from '../view/empty-message-view.js';
+import {Filters} from '../const.js';
 
 export default class MainPresenter {
   eventListComponent = new PointListView();
@@ -20,9 +22,19 @@ export default class MainPresenter {
     render(new SortingsView(), this.#container);
     render(this.eventListComponent, this.#container);
 
+    const isEmpty = (array) => !(array && array.length > 0);
+    if (isEmpty(points)) {
+      this.#renderEmptyMessageView();
+      return;
+    }
+
     points.forEach((point) => {
       this.#renderPoint(point);
     });
+  }
+
+  #renderEmptyMessageView() {
+    render(new EmptyMessageView({filter: Filters}), this.#container);
   }
 
   #renderPoint(point) {
