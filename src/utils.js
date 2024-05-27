@@ -1,5 +1,6 @@
-import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import dayjs from 'dayjs';
+
 dayjs.extend(duration);
 
 function formatDate(dueDate, format) {
@@ -30,4 +31,6 @@ const getDuration = (dateFrom, dateTo) => {
   return formattedDuration.join(' ');
 };
 
-export { formatDate, getDuration };
+const updateData = (points, update) => points.map((point) => point.id === update.id ? update : point);
+
+export {formatDate, getDuration, updateData};

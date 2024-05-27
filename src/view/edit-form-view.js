@@ -1,14 +1,16 @@
+import AbstractView from '../framework/view/abstract-view.js';
+
 import {POINT_TYPES} from '../const.js';
 import {formatDate} from '../utils.js';
-import AbstractView from '../framework/view/abstract-view.js';
 
 const createFormTemplate = (point, destinations, offers) => {
   const pointDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
+  const pointId = point.id || 0;
+
   const {dateFrom, dateTo, type, basePrice} = point;
   const {description, pictures} = pointDestinations || {};
-  const pointId = point.id || 0;
 
   return (`
 <li class="trip-events__item">
@@ -106,6 +108,7 @@ export default class EditFormView extends AbstractView {
   #point = null;
   #destinations = null;
   #offers = null;
+
   #handleFormSubmit = null;
   #handleEditClick = null;
 
@@ -114,6 +117,7 @@ export default class EditFormView extends AbstractView {
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
+
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
 
@@ -127,7 +131,7 @@ export default class EditFormView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
   #editClickHandler = (evt) => {

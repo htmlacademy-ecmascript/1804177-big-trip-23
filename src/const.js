@@ -16,4 +16,11 @@ const TripEmptyMessage = {
   [Filters.PAST]: 'There are no past events now'
 };
 
-export {POINT_TYPES, FILTER_TYPES, SORT_TYPES, Filters, TripEmptyMessage};
+const isEmpty = (array) => !(array && array.length > 0);
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
+export {POINT_TYPES, FILTER_TYPES, SORT_TYPES, Filters, TripEmptyMessage, isEmpty, Mode};
