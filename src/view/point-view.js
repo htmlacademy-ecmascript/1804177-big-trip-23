@@ -1,11 +1,13 @@
-import {formatDate, getDuration} from '../utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
+import {formatDate, getDuration} from '../utils.js';
+
 const createPointTempale = (point, destinations, offers) => {
-  const {dateFrom, dateTo, type, basePrice, isFavorite} = point;
   const currentDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
+
+  const {dateFrom, dateTo, type, basePrice, isFavorite} = point;
 
   return (
     `<li class="trip-events__item">
@@ -51,24 +53,32 @@ export default class PointView extends AbstractView {
   #point = null;
   #destinations = null;
   #offers = null;
-  #handleEditClick = null;
 
-  constructor({point, destinations, offers, onEditClick}) {
+  #handleEditClick = null;
+  #handleFavoriteClick = null;
+
+  constructor({point, destinations, offers, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
+
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
     return createPointTempale(this.#point, this.#destinations, this.#offers);
   }
 
-  #editClickHandler = (evt) => {
-    evt.preventDefault();
+  #editClickHandler = () => {
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = () => {
+    this.#handleFavoriteClick();
   };
 }
