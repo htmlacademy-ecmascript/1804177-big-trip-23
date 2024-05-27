@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 import {POINT_TYPES} from '../const.js';
-import {formatDate} from '../utils.js';
+import {formatDate} from '../utils/common.js';
 
 const createFormTemplate = (point, destinations, offers) => {
   const pointDestinations = destinations.find((destination) => destination.id === point.destination);

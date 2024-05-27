@@ -6,17 +6,20 @@ import EmptyMessageView from '../view/empty-message-view.js';
 
 import PointPresenter from './point-presenter.js';
 
-import {Filters, isEmpty} from '../const.js';
-import {updateData} from '../utils.js';
+import {Filters, isEmpty, SortType} from '../const.js';
+import {updateData} from '../utils/common.js';
+import {sortByTime, sortByPrice} from '../utils/sort.js';
 
 export default class MainPresenter {
   #pointListComponent = new PointListView();
+  #sortComponent = null;
+
   #container = null;
   #pointModel = null;
 
   #pointsPresenter = new Map();
-  #sortComponent = new SortingsView();
-
+  #currentSortType = SortType.DAY;
+  #soursedPoits = [];
   #points = [];
 
   constructor({container, pointModel}) {
@@ -26,7 +29,42 @@ export default class MainPresenter {
 
   init() {
     this.#points = [...this.#pointModel.getPoints()];
+    this.#soursedPoits = [...this.#pointModel.getPoints()];
+    this.#renderSort();
     this.#renderContent();
+  }
+
+  #sortPoint(sortType) {
+    switch (sortType) {
+      case SortType.TIME:
+        this.#points.sort(sortByTime);
+        break;
+      case SortType.PRICE:
+        this.#points.sort(sortByPrice);
+        break;
+      default:
+        this.#points = [...this.#soursedPoits];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoint(sortType);
+    this.#clearPointList();
+    this.#renderContent();
+  };
+
+  #renderSort() {
+    this.#sortComponent = new SortingsView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
+    render(this.#sortComponent, this.#container);
   }
 
   #renderContent() {
@@ -37,7 +75,6 @@ export default class MainPresenter {
       return;
     }
 
-    render(this.#sortComponent, this.#container);
     render(this.#pointListComponent, this.#sortComponent.element, RenderPosition.AFTEREND);
 
     this.#points.forEach((point) => {
@@ -68,6 +105,12 @@ export default class MainPresenter {
 
   #handlePointChange = (updatePoint) => {
     this.#points = updateData(this.#points, updatePoint);
+    this.#soursedPoits = updateData(this.#soursedPoits, updatePoint);
     this.#pointsPresenter.get(updatePoint.id).init(updatePoint);
   };
+
+  #clearPointList() {
+    this.#pointsPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenter.clear();
+  }
 }
