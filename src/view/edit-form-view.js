@@ -7,7 +7,7 @@ const createFormTemplate = (point, destinations, offers) => {
   const pointDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
-  const pointId = point.id || 0;
+  const pointId = point.id || null;
 
   const {dateFrom, dateTo, type, basePrice} = point;
   const {description, pictures} = pointDestinations || {};

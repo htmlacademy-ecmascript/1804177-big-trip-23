@@ -1,5 +1,4 @@
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-const FILTER_TYPES = ['Everything', 'Future', 'Present', 'Past'];
 
 const SortType = {
   DAY: 'day',
@@ -10,10 +9,10 @@ const SortType = {
 };
 
 const Filters = {
-  EVERYTHING: 'Everything',
-  FUTURE: 'Future',
-  PRESENT: 'Present',
-  PAST: 'Past',
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
 const TripEmptyMessage = {
@@ -30,4 +29,4 @@ const Mode = {
   EDITING: 'EDITING'
 };
 
-export {POINT_TYPES, FILTER_TYPES, Filters, TripEmptyMessage, isEmpty, Mode, SortType};
+export {POINT_TYPES, Filters, TripEmptyMessage, isEmpty, Mode, SortType};

@@ -6,8 +6,8 @@ import EmptyMessageView from '../view/empty-message-view.js';
 
 import PointPresenter from './point-presenter.js';
 
-import {Filters, isEmpty, SortType} from '../const.js';
-import {updateData} from '../utils/common.js';
+import {isEmpty, SortType} from '../const.js';
+import {updateDataPoint} from '../utils/common.js';
 import {sortByTime, sortByPrice} from '../utils/sort.js';
 
 export default class MainPresenter {
@@ -16,20 +16,22 @@ export default class MainPresenter {
 
   #container = null;
   #pointModel = null;
+  #filterModel = null;
 
-  #pointsPresenter = new Map();
+  #pointsPresenters = new Map();
   #currentSortType = SortType.DAY;
-  #soursedPoits = [];
+  #sourcedPoints = [];
   #points = [];
 
-  constructor({container, pointModel}) {
+  constructor({container, pointModel, filterModel}) {
     this.#container = container;
     this.#pointModel = pointModel;
+    this.#filterModel = filterModel;
   }
 
   init() {
     this.#points = [...this.#pointModel.getPoints()];
-    this.#soursedPoits = [...this.#pointModel.getPoints()];
+    this.#sourcedPoints = [...this.#pointModel.getPoints()];
     this.#renderSort();
     this.#renderContent();
   }
@@ -43,7 +45,7 @@ export default class MainPresenter {
         this.#points.sort(sortByPrice);
         break;
       default:
-        this.#points = [...this.#soursedPoits];
+        this.#points = [...this.#sourcedPoints];
     }
 
     this.#currentSortType = sortType;
@@ -68,9 +70,7 @@ export default class MainPresenter {
   }
 
   #renderContent() {
-    const points = this.#pointModel.getPoints();
-
-    if (isEmpty(points)) {
+    if (isEmpty(this.#points)) {
       this.#renderEmptyMessageView();
       return;
     }
@@ -83,7 +83,7 @@ export default class MainPresenter {
   }
 
   #renderEmptyMessageView() {
-    render(new EmptyMessageView({filter: Filters}), this.#container);
+    render(new EmptyMessageView({filter: this.#filterModel.filter}), this.#container);
   }
 
   #renderPoint(point) {
@@ -96,21 +96,21 @@ export default class MainPresenter {
       onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point);
-    this.#pointsPresenter.set(point.id, pointPresenter);
+    this.#pointsPresenters.set(point.id, pointPresenter);
   }
 
   #handleModeChange = () => {
-    this.#pointsPresenter.forEach((presenter) => presenter.resetView());
+    this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
 
   #handlePointChange = (updatePoint) => {
-    this.#points = updateData(this.#points, updatePoint);
-    this.#soursedPoits = updateData(this.#soursedPoits, updatePoint);
-    this.#pointsPresenter.get(updatePoint.id).init(updatePoint);
+    this.#points = updateDataPoint(this.#points, updatePoint);
+    this.#sourcedPoints = updateDataPoint(this.#sourcedPoints, updatePoint);
+    this.#pointsPresenters.get(updatePoint.id).init(updatePoint);
   };
 
   #clearPointList() {
-    this.#pointsPresenter.forEach((presenter) => presenter.destroy());
-    this.#pointsPresenter.clear();
+    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenters.clear();
   }
 }
