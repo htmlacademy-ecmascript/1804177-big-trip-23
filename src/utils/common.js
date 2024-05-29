@@ -31,6 +31,6 @@ const getDuration = (dateFrom, dateTo) => {
   return formattedDuration.join(' ');
 };
 
-const updateData = (points, update) => points.map((point) => point.id === update.id ? update : point);
+const updateDataPoint = (points, update) => points.map((point) => point.id === update.id ? update : point);
 
-export {formatDate, getDuration, updateData};
+export {formatDate, getDuration, updateDataPoint};

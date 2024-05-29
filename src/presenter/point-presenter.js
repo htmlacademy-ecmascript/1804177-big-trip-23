@@ -1,4 +1,4 @@
-import {render, RenderPosition, replace} from '../framework/render.js';
+import {remove, render, RenderPosition, replace} from '../framework/render.js';
 
 import PointView from '../view/point-view.js';
 import EditFormView from '../view/edit-form-view.js';
@@ -37,7 +37,7 @@ export default class PointPresenter {
   }
 
   #renderPoint(point, destinations, offers) {
-    const prevPointView = this.#pointView;
+    this.#point = this.#pointView;
 
     this.#pointView = new PointView({
       point,
@@ -61,12 +61,19 @@ export default class PointPresenter {
       }
     });
 
-    if (prevPointView === null) {
+    if (this.#point === null) {
       render(this.#pointView, this.#container, RenderPosition.BEFOREEND);
       return;
     }
 
-    replace(this.#pointView, prevPointView);
+    replace(this.#pointView, this.#point);
+  }
+
+  destroy() {
+    remove(this.#pointView);
+    remove(this.#editFormView);
+
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   resetView() {

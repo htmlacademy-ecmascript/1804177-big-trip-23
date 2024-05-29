@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-import {formatDate, getDuration} from '../utils.js';
+import {formatDate, getDuration} from '../utils/common.js';
 
 const createPointTempale = (point, destinations, offers) => {
   const currentDestinations = destinations.find((destination) => destination.id === point.destination);
