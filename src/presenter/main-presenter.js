@@ -7,7 +7,7 @@ import EmptyMessageView from '../view/empty-message-view.js';
 import PointPresenter from './point-presenter.js';
 
 import {isEmpty, SortType} from '../const.js';
-import {updateDataPoint} from '../utils/common.js';
+import {updatePoint} from '../utils/common.js';
 import {sortByTime, sortByPrice} from '../utils/sort.js';
 
 export default class MainPresenter {
@@ -103,10 +103,10 @@ export default class MainPresenter {
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatePoint) => {
-    this.#points = updateDataPoint(this.#points, updatePoint);
-    this.#sourcedPoints = updateDataPoint(this.#sourcedPoints, updatePoint);
-    this.#pointsPresenters.get(updatePoint.id).init(updatePoint);
+  #handlePointChange = (updated) => {
+    this.#points = updatePoint(this.#points, updated);
+    this.#sourcedPoints = updatePoint(this.#sourcedPoints, updated);
+    this.#pointsPresenters.get(updated.id).init(updated);
   };
 
   #clearPointList() {
