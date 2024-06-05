@@ -32,7 +32,31 @@ const offers = [
   {
     'type': 'flight',
     'offers': []
-  }
+  },
+  {
+    'type': 'bus',
+    'offers': []
+  },
+  {
+    'type': 'train',
+    'offers': []
+  },
+  {
+    'type': 'ship',
+    'offers': []
+  },
+  {
+    'type': 'check-in',
+    'offers': []
+  },
+  {
+    'type': 'sightseeing',
+    'offers': []
+  },
+  {
+    'type': 'restaurant',
+    'offers': []
+  },
 ];
 
 export const getOffers = ()=> offers;
