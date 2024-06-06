@@ -1,5 +1,3 @@
-const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-
 const SortType = {
   DAY: 'day',
   EVENT: 'event',
@@ -29,4 +27,4 @@ const Mode = {
   EDITING: 'EDITING'
 };
 
-export {POINT_TYPES, Filters, TripEmptyMessage, isEmpty, Mode, SortType};
+export {Filters, TripEmptyMessage, isEmpty, Mode, SortType};

@@ -37,7 +37,7 @@ export default class PointPresenter {
   }
 
   #renderPoint(point, destinations, offers) {
-    this.#point = this.#pointView;
+    const prevPointView = this.#pointView;
 
     this.#pointView = new PointView({
       point,
@@ -61,12 +61,12 @@ export default class PointPresenter {
       }
     });
 
-    if (this.#point === null) {
+    if (prevPointView === null) {
       render(this.#pointView, this.#container, RenderPosition.BEFOREEND);
       return;
     }
 
-    replace(this.#pointView, this.#point);
+    replace(this.#pointView, prevPointView);
   }
 
   destroy() {
@@ -78,6 +78,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode === Mode.EDITING) {
+      this.#editFormView.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
@@ -97,7 +98,7 @@ export default class PointPresenter {
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
-      this.#replaceFormToPoint();
+      this.resetView();
     }
   };
 

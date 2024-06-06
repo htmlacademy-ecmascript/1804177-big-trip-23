@@ -7,6 +7,8 @@ function formatDate(dueDate, format) {
   return dueDate ? dayjs(dueDate).format(format) : '';
 }
 
+const capitalizeFirstLetter = (word) => word[0].toUpperCase() + word.slice(1);
+
 const getDuration = (dateFrom, dateTo) => {
   const startDate = dayjs(dateFrom).startOf('minute');
   const endDate = dayjs(dateTo).startOf('minute');
@@ -31,6 +33,6 @@ const getDuration = (dateFrom, dateTo) => {
   return formattedDuration.join(' ');
 };
 
-const updateDataPoint = (points, update) => points.map((point) => point.id === update.id ? update : point);
+const updatePoint = (points, update) => points.map((point) => point.id === update.id ? update : point);
 
-export {formatDate, getDuration, updateDataPoint};
+export {formatDate, getDuration, updatePoint, capitalizeFirstLetter};
