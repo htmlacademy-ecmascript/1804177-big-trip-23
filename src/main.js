@@ -20,7 +20,7 @@ const filtersView = new FiltersView({
   onFilterChange: (filter) => {
     filterModel.setFilter(filter);
   },
-  isDisabled: !pointModel.getPoints().length > 0
+  isDisabled: !pointModel.points.length > 0
 });
 
 render(new InfoView(), tripMainElement, RenderPosition.AFTERBEGIN);

@@ -4,6 +4,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import {formatDate, capitalizeFirstLetter} from '../utils/common.js';
+import {UpdateType, UserAction} from '../const.js';
 
 const pointTypeItemTempalte = (point, pointId, type) => `
     <div class="event__type-item">
@@ -248,7 +249,10 @@ export default class EditFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditFormView.parsePointToState(this._state));
+    this.#handleFormSubmit(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      EditFormView.parsePointToState(this._state));
   };
 
   #editClickHandler = (evt) => {
