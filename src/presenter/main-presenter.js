@@ -48,7 +48,7 @@ export default class MainPresenter {
     if (this.#currentSortType === sortType) {
       return;
     }
-
+    this.#currentSortType = sortType;
     this.#clearPointList();
     this.#renderContent();
   };

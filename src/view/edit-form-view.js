@@ -4,7 +4,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import {formatDate, capitalizeFirstLetter} from '../utils/common.js';
-import {UpdateType, UserAction} from '../const.js';
 
 const pointTypeItemTempalte = (point, pointId, type) => `
     <div class="event__type-item">
@@ -141,8 +140,9 @@ export default class EditFormView extends AbstractStatefulView {
 
   #handleFormSubmit = null;
   #handleEditClick = null;
+  #handleDeleteClick = null;
 
-  constructor({point, destinations, offers, onFormSubmit, onEditClick}) {
+  constructor({point, destinations, offers, onFormSubmit, onEditClick, onDeleteClick}) {
     super();
     this._setState(EditFormView.parseStateToPoint(point));
     this.#point = point;
@@ -151,6 +151,7 @@ export default class EditFormView extends AbstractStatefulView {
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -181,6 +182,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationTypeHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteHandler);
 
     this.#setDatePickerStart();
     this.#setDatePickerEnd();
@@ -249,10 +251,12 @@ export default class EditFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      EditFormView.parsePointToState(this._state));
+    this.#handleFormSubmit(EditFormView.parsePointToState(this._state));
+  };
+
+  #formDeleteHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditFormView.parseStateToPoint(this._state));
   };
 
   #editClickHandler = (evt) => {

@@ -33,4 +33,6 @@ const getDuration = (dateFrom, dateTo) => {
   return formattedDuration.join(' ');
 };
 
-export {formatDate, getDuration, capitalizeFirstLetter};
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+export {formatDate, getDuration, capitalizeFirstLetter, isDatesEqual};

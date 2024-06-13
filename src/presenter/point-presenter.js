@@ -4,6 +4,7 @@ import PointView from '../view/point-view.js';
 import EditFormView from '../view/edit-form-view.js';
 
 import {Mode, UserAction, UpdateType} from '../const.js';
+import {isDatesEqual} from '../utils/common.js';
 
 export default class PointPresenter {
   #container = null;
@@ -53,9 +54,8 @@ export default class PointPresenter {
       point,
       destinations,
       offers,
-      onFormSubmit: () => {
-        this.#replaceFormToPoint();
-      },
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
       onEditClick: () => {
         this.#replaceFormToPoint();
       }
@@ -68,6 +68,27 @@ export default class PointPresenter {
 
     replace(this.#pointView, prevPointView);
   }
+
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dateFrom, update.point.dateTo) ||
+      !isDatesEqual(this.#point.dateTo, update.point.dateFrom);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update.point,
+    );
+    this.#replacePointToForm();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
 
   destroy() {
     remove(this.#pointView);
