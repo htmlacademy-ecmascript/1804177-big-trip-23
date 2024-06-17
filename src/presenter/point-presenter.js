@@ -70,13 +70,14 @@ export default class PointPresenter {
   }
 
   #handleFormSubmit = (update) => {
-    const isMinorUpdate =
+    const isMajorUpdate =
       !isDatesEqual(this.#point.dateFrom, update.point.dateTo) ||
-      !isDatesEqual(this.#point.dateTo, update.point.dateFrom);
+      !isDatesEqual(this.#point.dateTo, update.point.dateFrom) ||
+      this.#point.basePrice !== update.basePrice;
 
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
       update.point,
     );
     this.#replacePointToForm();
@@ -85,7 +86,7 @@ export default class PointPresenter {
   #handleDeleteClick = (point) => {
     this.#handleDataChange(
       UserAction.DELETE_POINT,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       point,
     );
   };

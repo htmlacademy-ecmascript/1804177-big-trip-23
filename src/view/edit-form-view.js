@@ -1,4 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import he from 'he';
 
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -92,7 +93,7 @@ const createFormTemplate = (state, destinations, offers) => {
             id="event-destination-${pointId}"
             type="text"
             name="event-destination"
-            value="${pointDestinations?.name ? pointDestinations.name : ''}"
+            value="${he.encode(pointDestinations?.name ? pointDestinations.name : '')}"
             list="destination-list-${pointId}">
           <datalist id="destination-list-${pointId}">
                 ${destinations.map((destination) => `<option value="${destination.name}"></option>`).join('')}
@@ -112,7 +113,7 @@ const createFormTemplate = (state, destinations, offers) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" value="${he.encode(basePrice.toString())}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

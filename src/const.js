@@ -6,7 +6,7 @@ const SortType = {
   OFFERS: 'offers',
 };
 
-const Filters = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
@@ -14,10 +14,10 @@ const Filters = {
 };
 
 const TripEmptyMessage = {
-  [Filters.EVERYTHING]: 'Click New Event to create your first point',
-  [Filters.FUTURE]: 'There are no future events now',
-  [Filters.PRESENT]: 'There are no present events now',
-  [Filters.PAST]: 'There are no past events now'
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now'
 };
 
 const isEmpty = (array) => !(array && array.length > 0);
@@ -39,4 +39,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {Filters, TripEmptyMessage, isEmpty, Mode, SortType, UserAction, UpdateType};
+export {FilterType, TripEmptyMessage, isEmpty, Mode, SortType, UserAction, UpdateType};
