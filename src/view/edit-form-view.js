@@ -55,8 +55,7 @@ const pointSectionDestinationTempalte = (description, pictures) => `
     : ''}
     </section>`;
 
-const createFormTemplate = (state, destinations, offers) => {
-  const {point} = state;
+const createFormTemplate = (point, destinations, offers) => {
 
   const pointDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
@@ -179,11 +178,12 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationTypeHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteHandler);
+    this.element.querySelector('form')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')?.addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__type-group')?.addEventListener('change', this.#typeToggleHandler);
+    this.element.querySelector('.event__input--destination')?.addEventListener('change', this.#destinationTypeHandler);
+    this.element.querySelector('.event__reset-btn')?.addEventListener('click', this.#formDeleteHandler);
+    this.element.querySelector('.event__input--price')?.addEventListener('input', this.#priceInputHandler);
 
     this.#setDatePickerStart();
     this.#setDatePickerEnd();
@@ -192,38 +192,38 @@ export default class EditFormView extends AbstractStatefulView {
   #typeToggleHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      point: {
-        ...this._state.point,
-        type: evt.target.value,
-      }
+      type: evt.target.value
     });
   };
 
   #destinationTypeHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      point: {
-        ...this._state.point,
-        destination: this.#destinations.find((destination) => destination.name === evt.target.value)?.id,
-      },
+      destination: this.#destinations.find((destination) => destination.name === evt.target.value)?.id
     });
   };
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
-      point: {
-        ...this._state.point,
-        dateFrom: userDate
-      }
+      dateFrom: userDate
     });
   };
 
   #dateToChangeHandler = ([userDate]) => {
     this.updateElement({
-      point: {
-        ...this._state.point,
-        dateTo: userDate
-      }
+      dateTo: userDate
+    });
+  };
+
+  #priceInputHandler = (evt) => {
+    evt.preventDefault();
+    const regExp = /[^0-9,]/g;
+    if (regExp.test(evt.target.value)) {
+      return;
+    }
+
+    this._setState({
+      basePrice: evt.target.value
     });
   };
 
@@ -233,7 +233,7 @@ export default class EditFormView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:1',
         enableTime: true,
         'time_24hr': true,
-        defaultDate: this._state.point.dateFrom,
+        defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler
       });
   }
@@ -244,8 +244,8 @@ export default class EditFormView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:1',
         enableTime: true,
         'time_24hr': true,
-        defaultDate: this._state.point.dateTo,
-        minDate: this._state.point.dateFrom,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       });
   }
@@ -266,9 +266,7 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   static parseStateToPoint(point) {
-    return {
-      point: {...point}
-    };
+    return {...point};
   }
 
   static parsePointToState(state) {

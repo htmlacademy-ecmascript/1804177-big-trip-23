@@ -23,7 +23,6 @@ export default class MainPresenter {
   #newPointPresenter = null;
   #pointsPresenters = new Map();
   #currentSortType = SortType.DAY;
-  #filterType = FilterType.EVERYTHING;
 
   constructor({container, pointModel, filterModel, onNewPointDestroy}) {
     this.#container = container;
@@ -41,15 +40,15 @@ export default class MainPresenter {
   }
 
   get points() {
-    this.#filterType = this.#filterModel.filter;
+    const filterType = this.#filterModel.filter;
     const points = this.#pointModel.points;
-    const filteredPoint = filter[this.#filterType](points);
+    const filteredPoint = filter[filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.TIME:
-        return filteredPoint.sort(sortByTime);
+        return [...filteredPoint].sort(sortByTime);
       case SortType.PRICE:
-        return filteredPoint.sort(sortByPrice);
+        return [...filteredPoint].sort(sortByPrice);
     }
 
     return filteredPoint;
@@ -142,13 +141,8 @@ export default class MainPresenter {
 
   #handleModelPoint = (updateType, data) => {
     switch (updateType) {
-      case UpdateType.PATCH:
-        this.#pointsPresenters.get(data.id).init(data);
-        break;
       case UpdateType.MINOR:
-        this.#clearPoint();
-        this.#renderSort();
-        this.#renderContent();
+        this.#pointsPresenters.get(data.id).init(data);
         break;
       case UpdateType.MAJOR:
         this.#clearPoint({resetSortType: true});

@@ -4,6 +4,16 @@ import {nanoid} from 'nanoid';
 import {UpdateType, UserAction} from '../const.js';
 import EditFormView from '../view/edit-form-view.js';
 
+const BLANK_EVENT = {
+  basePrice: '0',
+  dateFrom: new Date().toISOString(),
+  dateTo: new Date().toISOString(),
+  destination: null,
+  isFavorite: false,
+  offers: [],
+  type: 'flight'
+};
+
 export default class NewPointPresenter {
   #pointListContainer = null;
   #handleDataChange = null;
@@ -23,10 +33,11 @@ export default class NewPointPresenter {
     }
 
     this.#pointEditComponent = new EditFormView({
+      point: BLANK_EVENT,
       offers,
       destinations,
       onFormSubmit: this.#handleFormSubmit,
-      onDestroy: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);

@@ -71,14 +71,14 @@ export default class PointPresenter {
 
   #handleFormSubmit = (update) => {
     const isMajorUpdate =
-      !isDatesEqual(this.#point.dateFrom, update.point.dateTo) ||
-      !isDatesEqual(this.#point.dateTo, update.point.dateFrom) ||
+      !isDatesEqual(this.#point.dateFrom, update.dateTo) ||
+      !isDatesEqual(this.#point.dateTo, update.dateFrom) ||
       this.#point.basePrice !== update.basePrice;
 
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
-      update.point,
+      update,
     );
     this.#replacePointToForm();
   };
