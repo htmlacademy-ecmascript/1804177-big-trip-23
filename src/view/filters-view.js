@@ -1,4 +1,4 @@
-import {Filters} from '../const.js';
+import {FilterType} from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createFilterItemTemplate = (type, currentFilter, isDisabled) => `
@@ -14,7 +14,7 @@ const createFilterItemTemplate = (type, currentFilter, isDisabled) => `
 
 const createFiltersTempale = (filters, currentFilter, isDisabled) => `
     <form class="trip-filters" action="#" method="get">
-       ${Object.values(Filters).map((filter) => createFilterItemTemplate(filter, currentFilter, isDisabled)).join('')}
+       ${Object.values(FilterType).map((filter) => createFilterItemTemplate(filter, currentFilter, isDisabled)).join('')}
 
        <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`;
@@ -22,14 +22,14 @@ const createFiltersTempale = (filters, currentFilter, isDisabled) => `
 export default class FiltersView extends AbstractView{
   #filters = {};
   #currentFilter = '';
-  #handleFilterChamge = null;
+  #handleFilterChange = null;
   #isDisabled = false;
 
   constructor({filters, currentFilter, onFilterChange, isDisabled}) {
     super();
     this.#filters = filters;
     this.#currentFilter = currentFilter;
-    this.#handleFilterChamge = onFilterChange;
+    this.#handleFilterChange = onFilterChange;
     this.#isDisabled = isDisabled;
 
     this.element.addEventListener('change', this.#filterChangeHandler);
@@ -41,6 +41,6 @@ export default class FiltersView extends AbstractView{
 
   #filterChangeHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFilterChamge(evt.target.value);
+    this.#handleFilterChange(evt.target.value);
   };
 }

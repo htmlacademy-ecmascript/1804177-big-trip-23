@@ -33,6 +33,6 @@ const getDuration = (dateFrom, dateTo) => {
   return formattedDuration.join(' ');
 };
 
-const updatePoint = (points, update) => points.map((point) => point.id === update.id ? update : point);
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
-export {formatDate, getDuration, updatePoint, capitalizeFirstLetter};
+export {formatDate, getDuration, capitalizeFirstLetter, isDatesEqual};

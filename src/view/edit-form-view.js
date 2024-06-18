@@ -1,4 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import he from 'he';
 
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -54,8 +55,7 @@ const pointSectionDestinationTempalte = (description, pictures) => `
     : ''}
     </section>`;
 
-const createFormTemplate = (state, destinations, offers) => {
-  const {point} = state;
+const createFormTemplate = (point, destinations, offers) => {
 
   const pointDestinations = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
@@ -92,7 +92,7 @@ const createFormTemplate = (state, destinations, offers) => {
             id="event-destination-${pointId}"
             type="text"
             name="event-destination"
-            value="${pointDestinations?.name ? pointDestinations.name : ''}"
+            value="${he.encode(pointDestinations?.name ? pointDestinations.name : '')}"
             list="destination-list-${pointId}">
           <datalist id="destination-list-${pointId}">
                 ${destinations.map((destination) => `<option value="${destination.name}"></option>`).join('')}
@@ -112,7 +112,7 @@ const createFormTemplate = (state, destinations, offers) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" value="${he.encode(basePrice.toString())}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -140,8 +140,9 @@ export default class EditFormView extends AbstractStatefulView {
 
   #handleFormSubmit = null;
   #handleEditClick = null;
+  #handleDeleteClick = null;
 
-  constructor({point, destinations, offers, onFormSubmit, onEditClick}) {
+  constructor({point, destinations, offers, onFormSubmit, onEditClick, onDeleteClick}) {
     super();
     this._setState(EditFormView.parseStateToPoint(point));
     this.#point = point;
@@ -150,6 +151,7 @@ export default class EditFormView extends AbstractStatefulView {
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -176,10 +178,12 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationTypeHandler);
+    this.element.querySelector('form')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')?.addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__type-group')?.addEventListener('change', this.#typeToggleHandler);
+    this.element.querySelector('.event__input--destination')?.addEventListener('change', this.#destinationTypeHandler);
+    this.element.querySelector('.event__reset-btn')?.addEventListener('click', this.#formDeleteHandler);
+    this.element.querySelector('.event__input--price')?.addEventListener('input', this.#priceInputHandler);
 
     this.#setDatePickerStart();
     this.#setDatePickerEnd();
@@ -188,38 +192,38 @@ export default class EditFormView extends AbstractStatefulView {
   #typeToggleHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      point: {
-        ...this._state.point,
-        type: evt.target.value,
-      }
+      type: evt.target.value
     });
   };
 
   #destinationTypeHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      point: {
-        ...this._state.point,
-        destination: this.#destinations.find((destination) => destination.name === evt.target.value)?.id,
-      },
+      destination: this.#destinations.find((destination) => destination.name === evt.target.value)?.id
     });
   };
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
-      point: {
-        ...this._state.point,
-        dateFrom: userDate
-      }
+      dateFrom: userDate
     });
   };
 
   #dateToChangeHandler = ([userDate]) => {
     this.updateElement({
-      point: {
-        ...this._state.point,
-        dateTo: userDate
-      }
+      dateTo: userDate
+    });
+  };
+
+  #priceInputHandler = (evt) => {
+    evt.preventDefault();
+    const regExp = /[^0-9,]/g;
+    if (regExp.test(evt.target.value)) {
+      return;
+    }
+
+    this._setState({
+      basePrice: evt.target.value
     });
   };
 
@@ -229,7 +233,7 @@ export default class EditFormView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:1',
         enableTime: true,
         'time_24hr': true,
-        defaultDate: this._state.point.dateFrom,
+        defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler
       });
   }
@@ -240,8 +244,8 @@ export default class EditFormView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:1',
         enableTime: true,
         'time_24hr': true,
-        defaultDate: this._state.point.dateTo,
-        minDate: this._state.point.dateFrom,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       });
   }
@@ -251,15 +255,18 @@ export default class EditFormView extends AbstractStatefulView {
     this.#handleFormSubmit(EditFormView.parsePointToState(this._state));
   };
 
+  #formDeleteHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditFormView.parseStateToPoint(this._state));
+  };
+
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
   };
 
   static parseStateToPoint(point) {
-    return {
-      point: {...point}
-    };
+    return {...point};
   }
 
   static parsePointToState(state) {
