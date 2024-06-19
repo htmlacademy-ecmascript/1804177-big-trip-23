@@ -96,7 +96,7 @@ const createFormTemplate = (point, destinations, offers) => {
             id="event-destination-${pointId}"
             type="text"
             name="event-destination"
-            value="${he.encode(pointDestinations?.name ? pointDestinations.name : '')}"
+            value="${he.encode(pointDestinations?.name ?? '')}"
             list="destination-list-${pointId}"
             ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-${pointId}">
