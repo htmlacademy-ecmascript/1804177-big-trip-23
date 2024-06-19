@@ -39,6 +39,7 @@ export default class PointPresenter {
 
   #renderPoint(point, destinations, offers) {
     const prevPointView = this.#pointView;
+    const prevEditFormView = this.#editFormView;
 
     this.#pointView = new PointView({
       point,
@@ -61,12 +62,22 @@ export default class PointPresenter {
       }
     });
 
-    if (prevPointView === null) {
+    if (prevPointView === null || prevEditFormView === null) {
       render(this.#pointView, this.#container, RenderPosition.BEFOREEND);
       return;
     }
 
-    replace(this.#pointView, prevPointView);
+    if (this.#mode === Mode.DEFAULT) {
+      replace(this.#pointView, prevPointView);
+    }
+
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#pointView, prevEditFormView);
+      this.#mode = Mode.DEFAULT;
+    }
+
+    remove(prevPointView);
+    remove(prevEditFormView);
   }
 
   #handleFormSubmit = (update) => {
@@ -103,6 +114,40 @@ export default class PointPresenter {
       this.#editFormView.reset(this.#point);
       this.#replaceFormToPoint();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormView.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormView.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#editFormView.shake();
+      return;
+    }
+    const resetFormState = () => {
+      this.#editFormView.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editFormView.shake(resetFormState);
   }
 
   #replacePointToForm() {
