@@ -91,7 +91,7 @@ export default class PointPresenter {
       isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
       update,
     );
-    this.#replacePointToForm();
+    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {
