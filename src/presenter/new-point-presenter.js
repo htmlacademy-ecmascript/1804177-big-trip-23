@@ -1,5 +1,4 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
-import {nanoid} from 'nanoid';
 
 import {UpdateType, UserAction} from '../const.js';
 import EditFormView from '../view/edit-form-view.js';
@@ -19,7 +18,7 @@ export default class NewPointPresenter {
   #handleDataChange = null;
   #handleDestroy = null;
 
-  #pointEditComponent = null;
+  #editFormView = null;
 
   constructor({pointListContainer, onDataChange, onDestroy}) {
     this.#pointListContainer = pointListContainer;
@@ -28,11 +27,11 @@ export default class NewPointPresenter {
   }
 
   init({offers, destinations}) {
-    if (this.#pointEditComponent !== null) {
+    if (this.#editFormView !== null) {
       return;
     }
 
-    this.#pointEditComponent = new EditFormView({
+    this.#editFormView = new EditFormView({
       point: BLANK_EVENT,
       offers,
       destinations,
@@ -40,31 +39,49 @@ export default class NewPointPresenter {
       onDeleteClick: this.#handleDeleteClick
     });
 
-    render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#editFormView, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#pointEditComponent === null) {
+    if (this.#editFormView === null) {
       return;
     }
 
     this.#handleDestroy();
 
-    remove(this.#pointEditComponent);
-    this.#pointEditComponent = null;
+    remove(this.#editFormView);
+    this.#editFormView = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  setSaving() {
+    this.#editFormView.updateElement({
+      isDisabled: true,
+      isSaveIng: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#editFormView.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editFormView.shake(resetFormState);
   }
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,
-      {id: nanoid(), ...point}
+      point
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

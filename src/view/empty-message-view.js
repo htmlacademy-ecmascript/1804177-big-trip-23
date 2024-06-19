@@ -1,17 +1,30 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {TripEmptyMessage} from '../const.js';
 
-const createEmptyMessageTempale = (filter) => `<p class="trip-events__msg">${TripEmptyMessage[filter]}</p>`;
+const loadMessages = {
+  LOADING: 'Loading...',
+  FAILED: 'Failed to load latest route information'
+};
+
+const createEmptyMessageTempale = (filter) => `<p class="trip-events__msg">${filter}</p>`;
 
 export default class EmptyMessageView extends AbstractView {
-  #filter = '';
+  #emptyMessage = null;
 
-  constructor({filter}) {
+  constructor({filter, isLoading, isFailed}) {
     super();
-    this.#filter = filter;
+    if (isLoading) {
+      this.#emptyMessage = loadMessages.LOADING;
+      return;
+    }
+    if (isFailed) {
+      this.#emptyMessage = loadMessages.FAILED;
+      return;
+    }
+    this.#emptyMessage = TripEmptyMessage[filter];
   }
 
   get template() {
-    return createEmptyMessageTempale(this.#filter);
+    return createEmptyMessageTempale(this.#emptyMessage);
   }
 }
