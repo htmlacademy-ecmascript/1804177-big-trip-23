@@ -4,12 +4,12 @@ import {UpdateType, UserAction} from '../const.js';
 import EditFormView from '../view/edit-form-view.js';
 
 const BLANK_EVENT = {
-  basePrice: '0',
-  dateFrom: new Date().toISOString(),
-  dateTo: new Date().toISOString(),
-  destination: null,
+  dateFrom: null,
+  dateTo: null,
+  basePrice: 0,
   isFavorite: false,
   offers: [],
+  destination: null,
   type: 'flight'
 };
 

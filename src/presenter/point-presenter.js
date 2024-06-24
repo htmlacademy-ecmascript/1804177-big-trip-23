@@ -37,71 +37,6 @@ export default class PointPresenter {
     this.#renderPoint(this.#point, this.#destinations, this.#offers);
   }
 
-  #renderPoint(point, destinations, offers) {
-    const prevPointView = this.#pointView;
-    const prevEditFormView = this.#editFormView;
-
-    this.#pointView = new PointView({
-      point,
-      destinations,
-      offers,
-      onEditClick: () => {
-        this.#replacePointToForm();
-      },
-      onFavoriteClick: this.#handleFavoriteClick,
-    });
-
-    this.#editFormView = new EditFormView({
-      point,
-      destinations,
-      offers,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
-      onEditClick: () => {
-        this.#replaceFormToPoint();
-      }
-    });
-
-    if (prevPointView === null || prevEditFormView === null) {
-      render(this.#pointView, this.#container, RenderPosition.BEFOREEND);
-      return;
-    }
-
-    if (this.#mode === Mode.DEFAULT) {
-      replace(this.#pointView, prevPointView);
-    }
-
-    if (this.#mode === Mode.EDITING) {
-      replace(this.#pointView, prevEditFormView);
-      this.#mode = Mode.DEFAULT;
-    }
-
-    remove(prevPointView);
-    remove(prevEditFormView);
-  }
-
-  #handleFormSubmit = (update) => {
-    const isMajorUpdate =
-      !isDatesEqual(this.#point.dateFrom, update.dateTo) ||
-      !isDatesEqual(this.#point.dateTo, update.dateFrom) ||
-      this.#point.basePrice !== update.basePrice;
-
-    this.#handleDataChange(
-      UserAction.UPDATE_POINT,
-      isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
-      update,
-    );
-    this.#replaceFormToPoint();
-  };
-
-  #handleDeleteClick = (point) => {
-    this.#handleDataChange(
-      UserAction.DELETE_POINT,
-      UpdateType.MAJOR,
-      point,
-    );
-  };
-
   destroy() {
     remove(this.#pointView);
     remove(this.#editFormView);
@@ -137,6 +72,7 @@ export default class PointPresenter {
   setAborting() {
     if (this.#mode === Mode.DEFAULT) {
       this.#editFormView.shake();
+      this.#pointView.shake();
       return;
     }
     const resetFormState = () => {
@@ -148,6 +84,49 @@ export default class PointPresenter {
     };
 
     this.#editFormView.shake(resetFormState);
+  }
+
+  #renderPoint(point, destinations, offers) {
+    const prevPointView = this.#pointView;
+    const prevEditFormView = this.#editFormView;
+
+    this.#pointView = new PointView({
+      point,
+      destinations,
+      offers,
+      onEditClick: () => {
+        this.#replacePointToForm();
+      },
+      onFavoriteClick: this.#handleFavoriteClick,
+    });
+
+    this.#editFormView = new EditFormView({
+      point,
+      destinations,
+      offers,
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
+      onEditClick: () => {
+        this.resetView();
+      }
+    });
+
+    if (prevPointView === null || prevEditFormView === null) {
+      render(this.#pointView, this.#container, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this.#mode === Mode.DEFAULT) {
+      replace(this.#pointView, prevPointView);
+    }
+
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#pointView, prevEditFormView);
+      this.#mode = Mode.DEFAULT;
+    }
+
+    remove(prevPointView);
+    remove(prevEditFormView);
   }
 
   #replacePointToForm() {
@@ -162,6 +141,27 @@ export default class PointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   }
+
+  #handleFormSubmit = (update) => {
+    const isMajorUpdate =
+      !isDatesEqual(this.#point.dateFrom, update.dateTo) ||
+      !isDatesEqual(this.#point.dateTo, update.dateFrom) ||
+      this.#point.basePrice !== update.basePrice;
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
+      update,
+    );
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
+  };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {

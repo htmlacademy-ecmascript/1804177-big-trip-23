@@ -10,7 +10,7 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import MainPresenter from './presenter/main-presenter.js';
 
-const AUTHORIZATION = 'Basic f5ds4l6y4d';
+const AUTHORIZATION = 'Basic f5ds4l6y41';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const tripMainElement = document.querySelector('.trip-main');
@@ -36,20 +36,24 @@ const presenter = new MainPresenter({
   onNewPointDestroy: handleNewPointFromClose
 });
 
-const newTaskButtonComponent = new NewPointButtonView({
-  onClick: handleNewPointButtonClick
+const newPointButtonComponent = new NewPointButtonView({
+  onClick: handleNewPointButtonClick,
 });
 
 function handleNewPointFromClose() {
-  newTaskButtonComponent.element.disabled = false;
+  newPointButtonComponent.element.disabled = false;
 }
 
 function handleNewPointButtonClick() {
   presenter.createPoint();
-  newTaskButtonComponent.element.disabled = true;
+  newPointButtonComponent.element.disabled = true;
 }
 
 pointModel.init()
-  .finally(() => render(newTaskButtonComponent, tripMainElement, RenderPosition.BEFOREEND));
+  .catch(() => {
+    presenter.handleApiError();
+    newPointButtonComponent.element.disabled = true;
+  })
+  .finally(() => render(newPointButtonComponent, tripMainElement, RenderPosition.BEFOREEND));
 filterPresenter.init();
 presenter.init();

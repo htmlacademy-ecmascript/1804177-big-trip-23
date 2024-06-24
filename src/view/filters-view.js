@@ -12,7 +12,7 @@ const createFilterItemTemplate = (type, currentFilter, isDisabled) => `
         <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
     </div>`;
 
-const createFiltersTempale = (filters, currentFilter, isDisabled) => `
+const createFiltersTemplate = (filters, currentFilter, isDisabled) => `
     <form class="trip-filters" action="#" method="get">
        ${Object.values(FilterType).map((filter) => createFilterItemTemplate(filter, currentFilter, isDisabled)).join('')}
 
@@ -20,7 +20,7 @@ const createFiltersTempale = (filters, currentFilter, isDisabled) => `
     </form>`;
 
 export default class FiltersView extends AbstractView{
-  #filters = {};
+  #filters = [];
   #currentFilter = '';
   #handleFilterChange = null;
   #isDisabled = false;
@@ -36,7 +36,7 @@ export default class FiltersView extends AbstractView{
   }
 
   get template() {
-    return createFiltersTempale(this.#filters, this.#currentFilter, this.#isDisabled);
+    return createFiltersTemplate(this.#filters, this.#currentFilter, this.#isDisabled);
   }
 
   #filterChangeHandler = (evt) => {
