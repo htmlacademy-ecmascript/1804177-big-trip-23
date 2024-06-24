@@ -20,7 +20,7 @@ const TripEmptyMessage = {
   [FilterType.PAST]: 'There are no past events now'
 };
 
-const isEmpty = (array) => !(array && array.length > 0);
+const isEmpty = (points) => !(points && points.length > 0);
 
 const Mode = {
   DEFAULT: 'DEFAULT',

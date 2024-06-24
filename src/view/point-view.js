@@ -9,19 +9,22 @@ const createPointTempale = (point, destinations, offers) => {
 
   const {dateFrom, dateTo, type, basePrice, isFavorite} = point;
 
+  const startDate = formatDate(dateFrom);
+  const endDate = formatDate(dateTo);
+
   return (
     `<li class="trip-events__item">
         <div class="event">
-          <time class="event__date" datetime="${formatDate(dateFrom, 'YYYY-MM-DD')}">${formatDate(dateFrom, 'MMM DD')}</time>
+          <time class="event__date" datetime="${startDate.yearMonthDay}">${startDate.monthDay}</time>
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
           </div>
           <h3 class="event__title">${type} ${currentDestinations.name}</h3>
           <div class="event__schedule">
             <p class="event__time">
-              <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, 'HH:mm')}</time>
+              <time class="event__start-time" datetime="${startDate.dateTHoursMinute}">${startDate.hourMinute}</time>
               &mdash;
-              <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, 'HH:mm')}</time>
+              <time class="event__end-time" datetime="${endDate.dateTHoursMinute}">${endDate.hourMinute}</time>
             </p>
             <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
           </div>

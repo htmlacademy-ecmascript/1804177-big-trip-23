@@ -3,9 +3,16 @@ import dayjs from 'dayjs';
 
 dayjs.extend(duration);
 
-function formatDate(dueDate, format) {
-  return dueDate ? dayjs(dueDate).format(format) : '';
-}
+const formatDate = (dueDate) => dueDate
+  ? {
+    monthDay: dayjs(dueDate).format('MMM D').toUpperCase(),
+    dayMonth: dayjs(dueDate).format('D MMM').toUpperCase(),
+    yearMonthDay: dayjs(dueDate).format('YYYY-MM-DD'),
+    hourMinute: dayjs(dueDate).format('HH:mm'),
+    dateHoursMinute: dayjs(dueDate).format('YY/MM/DD HH:mm'),
+    dateTHoursMinute: dayjs(dueDate).format('YYYY-MM-DDTHH:mm'),
+  }
+  : '';
 
 const capitalizeFirstLetter = (word) => word[0].toUpperCase() + word.slice(1);
 
@@ -19,18 +26,18 @@ const getDuration = (dateFrom, dateTo) => {
   const hours = durationDate.hours();
   const minutes = durationDate.minutes();
 
-  const formattedDuration = [];
+  const formattedDurationParts = [];
   if (days > 0) {
-    formattedDuration.push(`${days}D`);
+    formattedDurationParts.push(`${days}D`);
   }
   if (hours > 0) {
-    formattedDuration.push(`${hours}H`);
+    formattedDurationParts.push(`${hours}H`);
   }
   if (minutes > 0) {
-    formattedDuration.push(`${minutes}M`);
+    formattedDurationParts.push(`${minutes}M`);
   }
 
-  return formattedDuration.join(' ');
+  return formattedDurationParts.join(' ');
 };
 
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
